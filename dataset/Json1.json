@@ -2,7 +2,7 @@
 	"name": "Json1",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "CTSJobADLSTarget1",
+			"referenceName": "AzureDataLakeStorage1",
 			"type": "LinkedServiceReference"
 		},
 		"annotations": [],
@@ -10,22 +10,11 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"fileName": "webdata1.json",
-				"folderPath": "targetdata",
-				"fileSystem": "container1"
+				"folderPath": "landing-zone",
+				"fileSystem": "containeringestion"
 			}
 		},
-		"schema": {
-			"type": "object",
-			"properties": {
-				"profession": {
-					"type": "string"
-				},
-				"custcnt": {
-					"type": "integer"
-				}
-			}
-		}
+		"schema": {}
 	},
 	"type": "Microsoft.DataFactory/factories/datasets"
 }

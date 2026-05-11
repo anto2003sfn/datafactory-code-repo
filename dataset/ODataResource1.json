@@ -2,14 +2,14 @@
 	"name": "ODataResource1",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "OData_for_SAP",
+			"referenceName": "OData1",
 			"type": "LinkedServiceReference"
 		},
 		"annotations": [],
 		"type": "ODataResource",
 		"schema": [],
 		"typeProperties": {
-			"path": "ItemCollection"
+			"path": "ItemTaxCalculationCollection"
 		}
 	},
 	"type": "Microsoft.DataFactory/factories/datasets"

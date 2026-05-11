@@ -37,9 +37,12 @@
 				"userProperties": [],
 				"typeProperties": {
 					"method": "POST",
+					"headers": {
+						"Content-Type": "application/json"
+					},
 					"url": "https://prod-40.eastus.logic.azure.com:443/workflows/e956cc0a77ae4e089705bd02d4ff8db0/triggers/When_an_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_an_HTTP_request_is_received%2Frun&sv=1.0&sig=nxbvP-yYjO07Dtj8oasvxWgddr_ZApxe7Hi8jiqHt6U",
 					"body": {
-						"value": "{\n     \"pipelinename\" : \"@{pipeline().Pipeline}\",\n     \"datafactoryname\" : \"@{pipeline().DataFactory}\"\n     \"runid\" : \"@{pipeline().RunId}\"\n     \"msg\" : \"@{variables('var1')}\"\n}",
+						"value": "{\n\"pipelinename\" : \"@{pipeline().Pipeline}\",\n\"datafactoryname\" : \"@{pipeline().DataFactory}\"\n\"runid\" : \"@{pipeline().RunId}\"\n\"msg\" : \"@{variables('var1')}\"\n}",
 						"type": "Expression"
 					}
 				}
@@ -51,7 +54,7 @@
 			}
 		},
 		"annotations": [],
-		"lastPublishTime": "2026-04-29T02:47:28Z"
+		"lastPublishTime": "2026-05-11T15:29:14Z"
 	},
 	"type": "Microsoft.DataFactory/factories/pipelines"
 }

@@ -1,21 +1,19 @@
 {
-	"name": "Parquet1",
+	"name": "Xml1",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "AzureDataLakeStorage1",
 			"type": "LinkedServiceReference"
 		},
 		"annotations": [],
-		"type": "Parquet",
+		"type": "Xml",
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"folderPath": "landing-zone",
-				"fileSystem": "containeringestion"
-			},
-			"compressionCodec": "snappy"
-		},
-		"schema": []
+				"folderPath": "sampledir",
+				"fileSystem": "containerwd362"
+			}
+		}
 	},
 	"type": "Microsoft.DataFactory/factories/datasets"
 }
