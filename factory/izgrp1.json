@@ -1,0 +1,15 @@
+{
+	"name": "izgrp1",
+	"properties": {
+		"trustModeClaimForMi": {
+			"value": "Enabled",
+			"editable": true
+		}
+	},
+	"location": "centralus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "b6d772a4-87e3-4230-828d-deb47c7a2fac",
+		"tenantId": "089cf941-fd24-44c5-8a92-985784dc42d6"
+	}
+}
