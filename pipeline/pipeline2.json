@@ -91,7 +91,11 @@
 						]
 					}
 				],
-				"userProperties": []
+				"userProperties": [],
+				"typeProperties": {
+					"message": "message1",
+					"errorCode": "1"
+				}
 			}
 		],
 		"annotations": [],
