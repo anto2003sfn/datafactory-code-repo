@@ -1,0 +1,156 @@
+{
+	"name": "us2_pipeline_mysql_blob",
+	"properties": {
+		"activities": [
+			{
+				"name": "move-data-mysql-blob",
+				"type": "Copy",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [
+					{
+						"name": "Source",
+						"value": "`device_master`"
+					},
+					{
+						"name": "Destination",
+						"value": "db-adls-container/inbound_dir/"
+					}
+				],
+				"typeProperties": {
+					"source": {
+						"type": "MySqlSource"
+					},
+					"sink": {
+						"type": "JsonSink",
+						"storeSettings": {
+							"type": "AzureBlobStorageWriteSettings",
+							"copyBehavior": "FlattenHierarchy"
+						},
+						"formatSettings": {
+							"type": "JsonWriteSettings",
+							"filePattern": "arrayOfObjects"
+						}
+					},
+					"enableStaging": false,
+					"parallelCopies": 2,
+					"enableSkipIncompatibleRow": true,
+					"logSettings": {
+						"enableCopyActivityLog": true,
+						"copyActivityLogSettings": {
+							"logLevel": "Warning",
+							"enableReliableLogging": false
+						},
+						"logLocationSettings": {
+							"linkedServiceName": {
+								"referenceName": "AzureBlobStorage1",
+								"type": "LinkedServiceReference"
+							},
+							"path": "db-adls-container/inbound_dir"
+						}
+					},
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "device_id",
+									"type": "Int32"
+								},
+								"sink": {
+									"path": "device_id"
+								}
+							},
+							{
+								"source": {
+									"name": "device_type",
+									"type": "String"
+								},
+								"sink": {
+									"path": "$['device_type']"
+								}
+							},
+							{
+								"source": {
+									"name": "brand",
+									"type": "String"
+								},
+								"sink": {
+									"path": "$['brand']"
+								}
+							},
+							{
+								"source": {
+									"name": "model",
+									"type": "String"
+								},
+								"sink": {
+									"path": "$['model']"
+								}
+							},
+							{
+								"source": {
+									"name": "owner_customer_id",
+									"type": "Int32"
+								},
+								"sink": {
+									"path": "$['cust_id']"
+								}
+							},
+							{
+								"source": {
+									"name": "status",
+									"type": "String"
+								},
+								"sink": {
+									"path": "$['status']"
+								}
+							},
+							{
+								"source": {
+									"name": "updated_at",
+									"type": "DateTime"
+								},
+								"sink": {
+									"path": "$['updated_dt']"
+								}
+							},
+							{
+								"source": {
+									"name": "os",
+									"type": "String"
+								},
+								"sink": {
+									"path": "$['os']"
+								}
+							}
+						]
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "ds_mySql_table1",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "ds_lkh_adls_target",
+						"type": "DatasetReference"
+					}
+				]
+			}
+		],
+		"annotations": [],
+		"lastPublishTime": "2026-05-06T04:43:17Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

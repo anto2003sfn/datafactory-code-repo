@@ -1,0 +1,15 @@
+{
+	"name": "adf-stracy-studio",
+	"properties": {
+		"trustModeClaimForMi": {
+			"value": "Enabled",
+			"editable": true
+		}
+	},
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "992ca827-6701-4c26-b2aa-bc65352285f9",
+		"tenantId": "7ff4645b-a007-4d7c-a366-82c20022bba4"
+	}
+}

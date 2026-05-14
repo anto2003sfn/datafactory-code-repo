@@ -1,0 +1,16 @@
+{
+	"name": "ds_mySql_table1",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_mysql_src",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "MySqlTable",
+		"schema": [],
+		"typeProperties": {
+			"tableName": "`device_master`"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

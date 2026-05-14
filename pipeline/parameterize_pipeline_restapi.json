@@ -1,0 +1,241 @@
+{
+	"name": "parameterize_pipeline_restapi",
+	"properties": {
+		"activities": [
+			{
+				"name": "sv_get_paratmers",
+				"type": "SetVariable",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
+				"dependsOn": [],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "default_list",
+					"value": {
+						"value": "@pipeline().parameters.country_list",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "fe_iterate_paramters",
+				"type": "ForEach",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
+				"dependsOn": [
+					{
+						"activity": "act_wait",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@pipeline().parameters.country_list",
+						"type": "Expression"
+					},
+					"isSequential": false,
+					"activities": [
+						{
+							"name": "web-extract-currency",
+							"type": "WebActivity",
+							"state": "Inactive",
+							"onInactiveMarkAs": "Succeeded",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"method": "GET",
+								"url": {
+									"value": "@concat('https://v6.exchangerate-api.com/v6/d2dc0f83029c12073054e204/latest/',item())",
+									"type": "Expression"
+								}
+							}
+						},
+						{
+							"name": "Wait1",
+							"type": "Wait",
+							"state": "Inactive",
+							"onInactiveMarkAs": "Succeeded",
+							"dependsOn": [
+								{
+									"activity": "web-extract-currency",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"userProperties": [],
+							"typeProperties": {
+								"waitTimeInSeconds": 5
+							}
+						},
+						{
+							"name": "fail_web_activities",
+							"type": "Fail",
+							"state": "Inactive",
+							"onInactiveMarkAs": "Succeeded",
+							"dependsOn": [
+								{
+									"activity": "web-extract-currency",
+									"dependencyConditions": [
+										"Failed"
+									]
+								}
+							],
+							"userProperties": [],
+							"typeProperties": {
+								"message": {
+									"value": "@concat('unable to process the currency', item())",
+									"type": "Expression"
+								},
+								"errorCode": "-200"
+							}
+						},
+						{
+							"name": "Copy data1",
+							"type": "Copy",
+							"state": "Inactive",
+							"onInactiveMarkAs": "Succeeded",
+							"dependsOn": [
+								{
+									"activity": "Wait1",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "GoogleBigQueryV2Source",
+									"additionalColumns": [
+										{
+											"name": "currency",
+											"value": {
+												"value": "@string(item())",
+												"type": "Expression"
+											}
+										},
+										{
+											"name": "webjson",
+											"value": {
+												"value": "@string(activity('web-extract-currency').output)",
+												"type": "Expression"
+											}
+										}
+									],
+									"query": "select 1 as dummy"
+								},
+								"sink": {
+									"type": "JsonSink",
+									"storeSettings": {
+										"type": "AzureBlobStorageWriteSettings",
+										"copyBehavior": "FlattenHierarchy"
+									},
+									"formatSettings": {
+										"type": "JsonWriteSettings",
+										"filePattern": "arrayOfObjects"
+									}
+								},
+								"enableStaging": false
+							},
+							"inputs": [
+								{
+									"referenceName": "ds_googleBigQueryObject1",
+									"type": "DatasetReference"
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "ds_lkh_adls_target",
+									"type": "DatasetReference"
+								}
+							]
+						}
+					]
+				}
+			},
+			{
+				"name": "fail_activities",
+				"description": "failure in getting parameters",
+				"type": "Fail",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
+				"dependsOn": [
+					{
+						"activity": "sv_get_paratmers",
+						"dependencyConditions": [
+							"Failed"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"message": {
+						"value": "'invalid currency'",
+						"type": "Expression"
+					},
+					"errorCode": "-100"
+				}
+			},
+			{
+				"name": "act_wait",
+				"type": "Wait",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
+				"dependsOn": [
+					{
+						"activity": "sv_get_paratmers",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"waitTimeInSeconds": 10
+				}
+			}
+		],
+		"parameters": {
+			"country_list": {
+				"type": "array",
+				"defaultValue": [
+					"USD",
+					"INR"
+				]
+			}
+		},
+		"variables": {
+			"default_list": {
+				"type": "Array",
+				"defaultValue": [
+					"USD"
+				]
+			}
+		},
+		"annotations": [],
+		"lastPublishTime": "2026-05-06T04:43:17Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

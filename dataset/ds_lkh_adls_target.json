@@ -1,0 +1,24 @@
+{
+	"name": "ds_lkh_adls_target",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureBlobStorage1",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": {
+					"value": "@concat('SalesData_',string(utcNow()))",
+					"type": "Expression"
+				},
+				"folderPath": "inbound_dir",
+				"container": "db-adls-container"
+			}
+		},
+		"schema": {}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

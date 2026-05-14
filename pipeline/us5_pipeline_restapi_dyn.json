@@ -1,0 +1,99 @@
+{
+	"name": "us5_pipeline_restapi_dyn",
+	"properties": {
+		"activities": [
+			{
+				"name": "sv_country_list",
+				"type": "SetVariable",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
+				"dependsOn": [],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "fileName_P2",
+					"value": {
+						"value": "@pipeline().parameters.param2",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "FE_country_list_looping",
+				"type": "ForEach",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
+				"dependsOn": [
+					{
+						"activity": "sv_country_list",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@pipeline().parameters.param1",
+						"type": "Expression"
+					},
+					"isSequential": false,
+					"activities": [
+						{
+							"name": "web_rest_api_ingestion",
+							"type": "WebActivity",
+							"state": "Inactive",
+							"onInactiveMarkAs": "Succeeded",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"method": "GET",
+								"httpRequestTimeout": {
+									"value": "@item()",
+									"type": "Expression"
+								},
+								"url": {
+									"value": "@concat('https://v6.exchangerate-api.com/v6/d2dc0f83029c12073054e204/latest/',item())",
+									"type": "Expression"
+								}
+							}
+						}
+					]
+				}
+			}
+		],
+		"parameters": {
+			"param1": {
+				"type": "array",
+				"defaultValue": [
+					"USD"
+				]
+			},
+			"param2": {
+				"type": "string",
+				"defaultValue": "\"SalesDate\""
+			}
+		},
+		"variables": {
+			"currencies": {
+				"type": "Array"
+			},
+			"fileName_P2": {
+				"type": "String"
+			}
+		},
+		"annotations": [],
+		"lastPublishTime": "2026-05-07T04:24:23Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

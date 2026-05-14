@@ -1,0 +1,21 @@
+{
+	"name": "ds_blob_src",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_blob_cust_ingestion",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "custs_header",
+				"folderPath": "inbound",
+				"container": "vz-blob-container"
+			}
+		},
+		"schema": {}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
